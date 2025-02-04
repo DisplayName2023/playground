@@ -1,0 +1,13 @@
+
+node_modules
+dist
+build
+Debug
+Release
+bin
+obj
+.vscode
+*.vsix
+*.log
+*.suo
+*.user
