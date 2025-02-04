@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const http = require('http');
 
 const PUBLIC_SERVER_WS = process.env.PUBLIC_SERVER_WS || 'ws://公网服务器IP:80'; // WebSocket地址
-const LOCAL_API = 'http://localhost:6399';      // 本地API地址
+const LOCAL_API_PORT = 6399;      // 本地API地址
 
 const ws = new WebSocket(PUBLIC_SERVER_WS);
 
@@ -20,7 +20,7 @@ ws.on('message', async (message) => {
     // 转发到本地API
     const options = {
       hostname: 'localhost',
-      port: 3000,
+      port: LOCAL_API_PORT,
       path: path,
       method: method,
       headers: headers
