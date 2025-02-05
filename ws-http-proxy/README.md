@@ -8,3 +8,6 @@ curl -X POST "http://localhost:6399/v1/chat/completions" \
          ],
          "temperature": 0.7
      }'
+
+
+export PUBLIC_SERVER_WS="ws://xxx.top:18080"
