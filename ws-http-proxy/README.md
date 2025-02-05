@@ -1,3 +1,7 @@
+
+
+export PUBLIC_SERVER_URL="ws://xxx.top:18080"
+
 curl -X POST "http://localhost:6399/v1/chat/completions" \
      -H "Content-Type: application/json" \
      -d '{
@@ -10,4 +14,3 @@ curl -X POST "http://localhost:6399/v1/chat/completions" \
      }'
 
 
-export PUBLIC_SERVER_WS="ws://xxx.top:18080"
