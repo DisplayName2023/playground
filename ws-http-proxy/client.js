@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 const http = require('http');
 
-const PUBLIC_SERVER_WS = process.env.PUBLIC_SERVER_WS || 'ws://公网服务器IP:80'; // WebSocket地址
+const PUBLIC_SERVER_WS = process.env.PUBLIC_SERVER_WS || 'ws://公网服务器IP:18080'; // WebSocket地址
 const LOCAL_API_PORT = 6399;      // 本地API地址
 
 const ws = new WebSocket(PUBLIC_SERVER_WS);
