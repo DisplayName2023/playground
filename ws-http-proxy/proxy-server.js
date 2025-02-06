@@ -12,6 +12,26 @@ const wss = new WebSocket.Server({ server });
 // 存储内网客户端连接
 let client = null;
 
+let timeoutMs = 10000;
+// API endpoint to set timeout
+app.post('/api/timeout', express.json(), (req, res) => {
+  const { timeout } = req.body;
+  
+  // Validate timeout value
+  if (!timeout || typeof timeout !== 'number' || timeout < 1000) {
+    return res.status(400).json({ 
+      error: 'Invalid timeout value. Must be a number >= 1000ms'
+    });
+  }
+
+  timeoutMs = timeout;
+  res.json({ 
+    message: 'Timeout updated successfully',
+    timeout: timeoutMs 
+  });
+});
+
+
 wss.on('connection', (ws) => {
   client = ws;
   console.log('内网客户端已连接');
@@ -44,7 +64,7 @@ app.all('*', async (req, res) => {
   const timeout = setTimeout(() => {
     res.status(504).send('网关超时');
     client.off('message', responseHandler);
-  }, 20000);
+  }, timeoutMs);
 
   const responseHandler = (message) => {
     try {
