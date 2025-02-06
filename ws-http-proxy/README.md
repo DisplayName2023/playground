@@ -1,6 +1,9 @@
 
+nohup node /root/github/playground/ws-http-proxy/proxy-server.js  > /tmp/output.log 2>&1 &
+
 
 export PUBLIC_SERVER_URL="ws://xxx.top:18080"
+
 
 curl -X POST "http://localhost:6399/v1/chat/completions" \
      -H "Content-Type: application/json" \
