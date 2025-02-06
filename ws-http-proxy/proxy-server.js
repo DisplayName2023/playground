@@ -44,7 +44,7 @@ app.all('*', async (req, res) => {
   const timeout = setTimeout(() => {
     res.status(504).send('网关超时');
     client.off('message', responseHandler);
-  }, 10000);
+  }, 20000);
 
   const responseHandler = (message) => {
     try {

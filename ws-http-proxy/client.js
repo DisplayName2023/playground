@@ -48,6 +48,8 @@ function connect() {
     try {
       const { id, method, path, headers, body } = JSON.parse(message);
 
+      console.log(`收到代理请求: ${method} ${path}`);
+
       // 转发到本地API
       const options = {
         hostname: 'localhost',
@@ -61,6 +63,9 @@ function connect() {
         let responseBody = '';
         res.on('data', (chunk) => (responseBody += chunk));
         res.on('end', () => {
+
+          console.log(`转发请求: ${method} ${path} ${responseBody}}`);
+
           ws.send(
             JSON.stringify({
               id: id,
