@@ -48,7 +48,7 @@ function connect() {
     try {
       const { id, method, path, headers, body } = JSON.parse(message);
 
-      console.log(`收到代理请求: ${method} ${path}`);
+      console.log(`收到代理请求: ${method} ${path} ${body}`);
 
       // 转发到本地API
       const options = {
@@ -97,6 +97,9 @@ function connect() {
 
 // 断线重连逻辑
 function reconnect() {
+  f (ws.readyState === WebSocket.OPEN) { // 检查连接是否已打开
+    ws.close(); // 关闭连接
+  }
   setTimeout(() => {
     console.log('尝试重新连接...');
     connect();
