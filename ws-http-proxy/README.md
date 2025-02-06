@@ -1,5 +1,5 @@
 
-nohup node /root/github/playground/ws-http-proxy/proxy-server.js  > /tmp/output.log 2>&1 &
+nohup node /root/github/playground/ws-http-proxy/proxy-server.js  > /tmp/ws-http-proxy-output.log 2>&1 &
 
 
 export PUBLIC_SERVER_URL="ws://xxx.top:18080"
