@@ -97,7 +97,7 @@ function connect() {
 
 // 断线重连逻辑
 function reconnect() {
-  f (ws.readyState === WebSocket.OPEN) { // 检查连接是否已打开
+  if (ws.readyState === WebSocket.OPEN) {
     ws.close(); // 关闭连接
   }
   setTimeout(() => {
