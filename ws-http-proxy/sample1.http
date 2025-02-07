@@ -12,3 +12,32 @@ Content-Type: application/json
     "temperature": 0.7
 }
 
+
+@GREEN_AI_URL = http://greentech123.top:8080
+
+### local
+POST {{GREEN_AI_URL}}/v1/chat/completions
+Content-Type: application/json
+
+{
+    "model": "deepseek-r1:14b", 
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "你好，能介绍一下你自己吗？"}
+    ],
+    "temperature": 0.7
+}
+
+@GREEN_AI_TIMEOUT = 15000
+
+### Set timeout
+POST {{GREEN_AI_URL}}/api/timeout
+Content-Type: application/json
+
+{
+    "timeout": {{GREEN_AI_TIMEOUT}}
+}
+
+
+### Get timeout
+GET {{GREEN_AI_URL}}/api/timeout

@@ -32,6 +32,15 @@ app.post('/api/timeout', express.json(), (req, res) => {
 });
 
 
+// API endpoint to get current timeout
+app.get('/api/timeout', (req, res) => {
+  res.json({
+    timeout: timeoutMs
+  });
+});
+
+
+
 wss.on('connection', (ws) => {
   client = ws;
   console.log('内网客户端已连接');
