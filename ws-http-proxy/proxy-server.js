@@ -56,6 +56,11 @@ app.all('*', async (req, res) => {
     return res.status(503).send('服务不可用：内网客户端未连接');
   }
 
+  console.log(`[${new Date().toISOString()}] 收到新请求:`, {
+    method: req.method,
+    path: req.url
+  });
+
   // 构造请求对象
   const requestId = Date.now();
   const requestData = {
@@ -63,7 +68,7 @@ app.all('*', async (req, res) => {
     method: req.method,
     path: req.url,
     headers: req.headers,
-    body: await getRequestBody(req) // 需要读取请求体
+    body: await getRequestBody(req)
   };
 
   // 设置流式响应头
@@ -73,11 +78,14 @@ app.all('*', async (req, res) => {
     'Connection': 'keep-alive'
   });
 
+  console.log(`[${new Date().toISOString()}] 发送请求到内网客户端, requestId: ${requestId}`);
+  
   // 发送请求到内网客户端
   client.send(JSON.stringify(requestData));
 
   // 定义并启动超时定时器
   let timeout = setTimeout(() => {
+    console.log(`[${new Date().toISOString()}] 请求超时 requestId: ${requestId}`);
     res.write('\n[Error: 网关超时]');
     res.end();
     client.off('message', responseHandler);
@@ -87,10 +95,18 @@ app.all('*', async (req, res) => {
   const responseHandler = (message) => {
     try {
       const data = JSON.parse(message);
+      console.log(`[${new Date().toISOString()}] 收到内网响应:`, {
+        requestId,
+        responseId: data.id,
+        hasToken: !!data.token,
+        done: !!data.done
+      });
+
       if (data.id === requestId) {
         // 每次收到 token 都重置超时（可选）
         clearTimeout(timeout);
         timeout = setTimeout(() => {
+          console.log(`[${new Date().toISOString()}] Token间隔超时 requestId: ${requestId}`);
           res.write('\n[Error: 网关超时]');
           res.end();
           client.off('message', responseHandler);
@@ -102,12 +118,13 @@ app.all('*', async (req, res) => {
         }
         // 如果收到完成标识，则结束响应
         if (data.done) {
+          console.log(`[${new Date().toISOString()}] 请求完成 requestId: ${requestId}`);
           res.end();
           client.off('message', responseHandler);
         }
       }
     } catch (e) {
-      console.error('解析响应失败:', e);
+      console.error(`[${new Date().toISOString()}] 解析响应失败:`, e);
     }
   };
 
