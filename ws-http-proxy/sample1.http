@@ -1,6 +1,9 @@
 
-### http://192.168.4.2:11434
-POST http://192.168.4.2:11434/v1/chat/completions
+# @LOCAL_API=http://192.168.4.2:11434
+@LOCAL_API=http://localhost:6399
+
+### LOCAL_API
+POST {{LOCAL_API}}/v1/chat/completions
 Content-Type: application/json
 
 {
@@ -12,10 +15,27 @@ Content-Type: application/json
     "temperature": 0.7
 }
 
+### LOCAL_API_STREAM
+POST {{LOCAL_API}}/v1/chat/completions
+Content-Type: application/json
+
+{
+    "model": "deepseek-r1:14b",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "你好，能介绍一下你自己吗？"}
+    ],
+    "stream": true,
+    "temperature": 0.7
+}
+
+
+
+
 
 @GREEN_AI_URL = http://greentech123.top:8080
 
-### local
+### Green
 POST {{GREEN_AI_URL}}/v1/chat/completions
 Content-Type: application/json
 
