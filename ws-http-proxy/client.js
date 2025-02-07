@@ -16,6 +16,10 @@ let heartbeatInterval;
 // 连接公网服务器
 function connect() {
 
+  if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+    console.log('WebSocket is already connected or connecting.');
+    return;
+  }
 
   ws = new WebSocket(PUBLIC_SERVER_URL);
   
@@ -35,7 +39,6 @@ function connect() {
     console.log('连接已关闭，尝试重新连接...');
     clearInterval(heartbeatInterval); // 清除心跳定时器
 
-    ws.terminate();
     
     reconnect();
   });
@@ -104,9 +107,7 @@ function connect() {
 
 // 断线重连逻辑
 function reconnect() {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.close(); // 关闭连接
-  }
+
   setTimeout(() => {
     console.log('尝试重新连接...');
     connect();
