@@ -66,22 +66,45 @@ app.all('*', async (req, res) => {
     body: await getRequestBody(req) // 需要读取请求体
   };
 
+  // 设置流式响应头
+  res.writeHead(200, {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  });
+
   // 发送请求到内网客户端
   client.send(JSON.stringify(requestData));
 
-  // 等待响应
-  const timeout = setTimeout(() => {
-    res.status(504).send('网关超时');
+  // 定义并启动超时定时器
+  let timeout = setTimeout(() => {
+    res.write('\n[Error: 网关超时]');
+    res.end();
     client.off('message', responseHandler);
   }, timeoutMs);
 
+  // 响应处理函数：假设内网客户端会多次返回带有 token 的消息
   const responseHandler = (message) => {
     try {
       const data = JSON.parse(message);
       if (data.id === requestId) {
+        // 每次收到 token 都重置超时（可选）
         clearTimeout(timeout);
-        res.status(data.status).set(data.headers).send(data.body);
-        client.off('message', responseHandler);
+        timeout = setTimeout(() => {
+          res.write('\n[Error: 网关超时]');
+          res.end();
+          client.off('message', responseHandler);
+        }, timeoutMs);
+
+        // 如果消息中包含 token，则写入响应流
+        if (data.token) {
+          res.write(data.token);
+        }
+        // 如果收到完成标识，则结束响应
+        if (data.done) {
+          res.end();
+          client.off('message', responseHandler);
+        }
       }
     } catch (e) {
       console.error('解析响应失败:', e);
