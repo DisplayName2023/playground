@@ -15,9 +15,7 @@ let heartbeatInterval;
 
 // 连接公网服务器
 function connect() {
-  if (ws) {
-    ws.terminate();
-  }
+
 
   ws = new WebSocket(PUBLIC_SERVER_URL);
   
@@ -36,6 +34,9 @@ function connect() {
   ws.on('close', () => {
     console.log('连接已关闭，尝试重新连接...');
     clearInterval(heartbeatInterval); // 清除心跳定时器
+
+    ws.terminate();
+    
     reconnect();
   });
 
