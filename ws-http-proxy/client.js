@@ -15,7 +15,13 @@ let heartbeatInterval;
 
 // 连接公网服务器
 function connect() {
+  if (ws) {
+    ws.terminate();
+  }
+
   ws = new WebSocket(PUBLIC_SERVER_URL);
+  
+ 
 
   ws.on('open', () => {
     console.log('已连接到公网服务器');
